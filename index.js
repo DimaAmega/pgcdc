@@ -51,6 +51,8 @@ function main() {
             -U ${dbUserName} -d ${database} --port ${dbPort} \
             --slot=${SLOT} --create-slot --if-not-exists -P wal2json`);
 
+	console.log(`SLOT ${SLOT} WAS CREATED`);
+
 	// capture WAL via pg_recvlogical
 	const captureWalCmd = `PGPASSWORD=${dbPassword} pg_recvlogical -h ${host} \
                             -U ${dbUserName} -d ${database} --port ${dbPort} \
