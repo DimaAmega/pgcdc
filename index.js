@@ -35,7 +35,7 @@ function setupArgv() {
 }
 
 function main() {
-	const SLOT = "test_slot";
+	const SLOT = "slot_test";
 	const {
 		h: host,
 		d: database,

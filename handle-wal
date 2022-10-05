@@ -11,7 +11,9 @@ const allLinesStream = readline.createInterface({
 	const fileToDump = process.env.FILE_TO_DUMP || "wal2.txt";
 	for await (let line of allLinesStream) {
 		const action = JSON.parse(line);
-		console.log(action);
+		// we cant write to stdout cause buffer exceeded
+		// see maxBuffer here https://nodejs.org/docs/latest-v14.x/api/child_process.html#child_process_child_process_exec_command_options_callback
+		// console.log(action);
 		fs.appendFileSync(fileToDump, `${line}\n`);
 	}
 })();
