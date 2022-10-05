@@ -46,17 +46,25 @@ function main() {
 
 	sh.set("-e");
 
+	const dbConfig = `-h ${host} -U ${dbUserName} -d ${database} --port ${dbPort}`;
+
+	sh.exec(
+		`PGPASSWORD=${dbPassword} psql ${dbConfig} -c 'select 1 as select_one'`
+	);
+
+	// https://www.postgresql.org/docs/current/app-pgrecvlogical.html
+
 	// create slot if not exists
-	sh.exec(`PGPASSWORD=${dbPassword} pg_recvlogical -h ${host} \
-            -U ${dbUserName} -d ${database} --port ${dbPort} \
-            --slot=${SLOT} --create-slot --if-not-exists -P wal2json`);
+	sh.exec(`PGPASSWORD=${dbPassword} pg_recvlogical ${dbConfig} \
+            --slot=${SLOT} --create-slot \
+            --if-not-exists -P wal2json`);
 
 	console.log(`SLOT ${SLOT} WAS CREATED`);
 
 	// capture WAL via pg_recvlogical
-	const captureWalCmd = `PGPASSWORD=${dbPassword} pg_recvlogical -h ${host} \
-                            -U ${dbUserName} -d ${database} --port ${dbPort} \
-                            --slot=${SLOT} --start -o pretty-print=1 \
+	const captureWalCmd = `PGPASSWORD=${dbPassword} pg_recvlogical ${dbConfig} \
+                            --slot=${SLOT} --start \
+                            -o pretty-print=1 \
                             -o format-version=2 \
                             -o add-msg-prefixes=wal2json -f -`;
 

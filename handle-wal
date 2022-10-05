@@ -8,7 +8,10 @@ const allLinesStream = readline.createInterface({
 });
 
 (async () => {
+	const fileToDump = process.env.FILE_TO_DUMP || "wal2.txt";
 	for await (let line of allLinesStream) {
-		console.log(JSON.parse(line));
+		const action = JSON.parse(line);
+		console.log(action);
+		fs.appendFileSync(fileToDump, `${line}\n`);
 	}
 })();
