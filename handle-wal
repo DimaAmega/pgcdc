@@ -1,17 +1,14 @@
 #!/usr/bin/env node
 
 const fs = require("fs");
+const readline = require("readline");
 
-function main() {
-	process.stdin.setEncoding("utf-8");
-	process.stdin.on("data", function (data) {
-		fs.appendFileSync("WAL.txt", data);
-		// FIX: this is wrong for huge outputs
-		// const events = data.split("\n").filter((e) => e);
-		// for (let e of events) console.log(JSON.parse(e));
-		// console.log(data);
-		console.log("*********************");
-	});
-}
+const allLinesStream = readline.createInterface({
+	input: process.stdin
+});
 
-main();
+(async () => {
+	for await (let line of allLinesStream) {
+		console.log(JSON.parse(line));
+	}
+})();
